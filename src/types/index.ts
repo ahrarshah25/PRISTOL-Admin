@@ -1,3 +1,16 @@
+export interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+export interface ContactMessage extends ContactFormData {
+  id: string;
+  status: 'unread' | 'read' | 'replied';
+  createdAt: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -32,16 +45,6 @@ export interface Order {
   createdAt: number;
 }
 
-export interface ContactMessage {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  status: 'unread' | 'read' | 'replied';
-  createdAt: number;
-}
-
 export interface AdminContextType {
   products: Product[];
   orders: Order[];
@@ -55,3 +58,10 @@ export interface AdminContextType {
   deleteMessage: (id: string) => Promise<void>;
   refreshData: () => Promise<void>;
 }
+
+export interface UploadResponse {
+  secure_url: string;
+  public_id: string;
+}
+
+export type AlertIcon = 'success' | 'error' | 'warning' | 'info' | 'question';

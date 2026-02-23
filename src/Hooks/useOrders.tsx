@@ -1,26 +1,27 @@
 import { useState } from 'react';
 import { useAdmin } from '../Context API/AdminContext';
+import type { Order } from '../types';
 
 export const useOrders = () => {
   const { orders, updateOrderStatus } = useAdmin();
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  const filteredOrders = orders.filter(order => {
+  const filteredOrders = orders.filter((order: Order) => {
     return statusFilter === 'all' || order.status === statusFilter;
   });
 
-  const getOrderById = (id: string) => {
-    return orders.find(o => o.id === id);
+  const getOrderById = (id: string): Order | undefined => {
+    return orders.find((o: Order) => o.id === id);
   };
 
-  const getTotalRevenue = () => {
+  const getTotalRevenue = (): number => {
     return orders
-      .filter(o => o.status === 'delivered')
-      .reduce((sum, order) => sum + order.totalAmount, 0);
+      .filter((o: Order) => o.status === 'delivered')
+      .reduce((sum: number, order: Order) => sum + order.totalAmount, 0);
   };
 
-  const getPendingOrders = () => {
-    return orders.filter(o => o.status === 'pending').length;
+  const getPendingOrders = (): number => {
+    return orders.filter((o: Order) => o.status === 'pending').length;
   };
 
   return {

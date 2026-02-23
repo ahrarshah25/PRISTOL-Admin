@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import type { FC } from 'react';
+import { Package } from 'lucide-react';
 import type { Order } from '../../../types';
 
 interface OrderTableProps {
@@ -7,29 +7,20 @@ interface OrderTableProps {
   onUpdateStatus: (id: string, status: Order['status']) => void;
 }
 
-const OrderTable: React.FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
-  const getStatusColor = (status: Order['status']) => {
+const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
+  const getStatusColor = (status: Order['status']): string => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      processing: 'bg-blue-100 text-blue-800',
-      shipped: 'bg-purple-100 text-purple-800',
-      delivered: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800'
+      pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      processing: 'bg-blue-100 text-blue-800 border-blue-200',
+      shipped: 'bg-purple-100 text-purple-800 border-purple-200',
+      delivered: 'bg-green-100 text-green-800 border-green-200',
+      cancelled: 'bg-red-100 text-red-800 border-red-200'
     };
     return colors[status];
   };
 
-  const getPaymentStatusColor = (status: Order['paymentStatus']) => {
-    const colors = {
-      paid: 'bg-green-100 text-green-800',
-      unpaid: 'bg-red-100 text-red-800',
-      refunded: 'bg-gray-100 text-gray-800'
-    };
-    return colors[status];
-  };
-
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
+  const formatDate = (timestamp: number): string => {
+    return new Date(timestamp).toLocaleDateString('en-PK', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -42,13 +33,12 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gradient-to-r from-green-50 to-green-100">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Customer</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Products</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Total</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Payment</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Total (PKR)</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Date</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
@@ -67,25 +57,20 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="text-sm text-gray-600">
-                    {order.products.length} items
+                  <div className="flex items-center gap-2">
+                    <Package className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {order.products.length} item{order.products.length > 1 ? 's' : ''}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <span className="text-sm font-semibold text-gray-900">
-                    ${order.totalAmount.toFixed(2)}
+                    Rs. {order.totalAmount.toLocaleString()}
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <div>
-                    <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${getPaymentStatusColor(order.paymentStatus)}`}>
-                      {order.paymentStatus}
-                    </span>
-                    <p className="text-xs text-gray-500 mt-1">{order.paymentMethod}</p>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                  <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(order.status)}`}>
                     {order.status}
                   </span>
                 </td>
@@ -96,7 +81,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                   <select
                     value={order.status}
                     onChange={(e) => onUpdateStatus(order.id, e.target.value as Order['status'])}
-                    className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
                   >
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>

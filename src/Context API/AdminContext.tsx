@@ -15,7 +15,7 @@ import type { Product, Order, ContactMessage, AdminContextType } from '../types'
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-export const useAdmin = () => {
+export const useAdmin = (): AdminContextType => {
   const context = useContext(AdminContext);
   if (!context) {
     throw new Error('useAdmin must be used within AdminProvider');
@@ -27,9 +27,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (): Promise<void> => {
     try {
       const querySnapshot = await getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc')));
       const productsData = querySnapshot.docs.map(doc => ({
@@ -42,7 +42,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (): Promise<void> => {
     try {
       const querySnapshot = await getDocs(query(collection(db, 'orders'), orderBy('createdAt', 'desc')));
       const ordersData = querySnapshot.docs.map(doc => ({
@@ -55,9 +55,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (): Promise<void> => {
     try {
-      const querySnapshot = await getDocs(query(collection(db, 'messages'), orderBy('createdAt', 'desc')));
+      const querySnapshot = await getDocs(query(collection(db, 'contactMessages'), orderBy('createdAt', 'desc')));
       const messagesData = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -68,7 +68,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const refreshData = async () => {
+  const refreshData = async (): Promise<void> => {
     setLoading(true);
     await Promise.all([fetchProducts(), fetchOrders(), fetchMessages()]);
     setLoading(false);
@@ -78,7 +78,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     refreshData();
   }, []);
 
-  const addProduct = async (product: Omit<Product, 'id' | 'createdAt'>) => {
+  const addProduct = async (product: Omit<Product, 'id' | 'createdAt'>): Promise<void> => {
     try {
       const docRef = await addDoc(collection(db, 'products'), {
         ...product,
@@ -91,7 +91,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const updateProduct = async (id: string, product: Partial<Product>) => {
+  const updateProduct = async (id: string, product: Partial<Product>): Promise<void> => {
     try {
       await updateDoc(doc(db, 'products', id), product);
       setProducts(products.map(p => p.id === id ? { ...p, ...product } : p));
@@ -100,7 +100,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const deleteProduct = async (id: string) => {
+  const deleteProduct = async (id: string): Promise<void> => {
     try {
       await deleteDoc(doc(db, 'products', id));
       setProducts(products.filter(p => p.id !== id));
@@ -109,7 +109,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const updateOrderStatus = async (id: string, status: Order['status']) => {
+  const updateOrderStatus = async (id: string, status: Order['status']): Promise<void> => {
     try {
       await updateDoc(doc(db, 'orders', id), { status });
       setOrders(orders.map(o => o.id === id ? { ...o, status } : o));
@@ -118,25 +118,25 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const updateMessageStatus = async (id: string, status: ContactMessage['status']) => {
+  const updateMessageStatus = async (id: string, status: ContactMessage['status']): Promise<void> => {
     try {
-      await updateDoc(doc(db, 'messages', id), { status });
+      await updateDoc(doc(db, 'contactMessages', id), { status });
       setMessages(messages.map(m => m.id === id ? { ...m, status } : m));
     } catch (error) {
       console.error('Error updating message:', error);
     }
   };
 
-  const deleteMessage = async (id: string) => {
+  const deleteMessage = async (id: string): Promise<void> => {
     try {
-      await deleteDoc(doc(db, 'messages', id));
+      await deleteDoc(doc(db, 'contactMessages', id));
       setMessages(messages.filter(m => m.id !== id));
     } catch (error) {
       console.error('Error deleting message:', error);
     }
   };
 
-  const value = {
+  const value: AdminContextType = {
     products,
     orders,
     messages,

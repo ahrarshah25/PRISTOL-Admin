@@ -1,25 +1,23 @@
-import { useState } from "react";
-import { useAdmin } from "../Context API/AdminContext";
-import type { Product } from "../types";
+import { useState } from 'react';
+import { useAdmin } from '../Context API/AdminContext';
+import type { Product } from '../types';
 
 export const useProducts = () => {
   const { products, addProduct, updateProduct, deleteProduct } = useAdmin();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || product.category === selectedCategory;
+  const filteredProducts = products.filter((product: Product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ["all", ...new Set(products.map((p) => p.category))];
+  const categories = ['all', ...new Set(products.map((p: Product) => p.category))];
 
-  const getProductById = (id: string) => {
-    return products.find((p) => p.id === id);
+  const getProductById = (id: string): Product | undefined => {
+    return products.find((p: Product) => p.id === id);
   };
 
   return {
@@ -33,6 +31,6 @@ export const useProducts = () => {
     addProduct,
     updateProduct,
     deleteProduct,
-    getProductById,
+    getProductById
   };
 };

@@ -5,12 +5,11 @@ import Dashboard from './Admin/Dashboard';
 import Products from './Admin/Products';
 import Orders from './Admin/Orders';
 import Messages from './Admin/Messages';
-import Settings from './Admin/Settings';
 
 const Admin: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState<string>('dashboard');
 
-  const renderContent = () => {
+  const renderContent = (): React.ReactNode => {
     switch (activeTab) {
       case 'dashboard':
         return <Dashboard />;
@@ -20,8 +19,6 @@ const Admin: React.FC = () => {
         return <Orders />;
       case 'messages':
         return <Messages />;
-      case 'settings':
-        return <Settings />;
       default:
         return <Dashboard />;
     }
@@ -31,7 +28,7 @@ const Admin: React.FC = () => {
     <AdminProvider>
       <div className="min-h-screen bg-gray-50">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="ml-64 p-8">
+        <div className="lg:ml-64 p-4 lg:p-8 pt-20 lg:pt-8">
           {renderContent()}
         </div>
       </div>

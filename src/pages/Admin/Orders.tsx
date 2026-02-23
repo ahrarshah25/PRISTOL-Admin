@@ -17,16 +17,18 @@ const Orders: React.FC = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
         <div className="flex items-center gap-4">
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Total Revenue</p>
-            <p className="text-xl font-bold text-green-600">${totalRevenue.toFixed(2)}</p>
+          <div className="bg-green-100 px-4 py-2 rounded-xl">
+            <p className="text-sm text-green-800 font-medium">
+              Revenue: <span className="font-bold">Rs. {totalRevenue.toLocaleString()}</span>
+            </p>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Pending Orders</p>
-            <p className="text-xl font-bold text-yellow-600">{pendingOrders}</p>
+          <div className="bg-yellow-100 px-4 py-2 rounded-xl">
+            <p className="text-sm text-yellow-800 font-medium">
+              Pending: <span className="font-bold">{pendingOrders}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -35,7 +37,7 @@ const Orders: React.FC = () => {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full sm:w-48 px-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="all">All Orders</option>
           <option value="pending">Pending</option>

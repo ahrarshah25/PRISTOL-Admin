@@ -1,16 +1,17 @@
 import React from 'react';
+import type { FC, ReactNode } from 'react';
 
 interface StatsCardProps {
   title: string;
   value: string | number;
-  icon: React.ReactNode;
+  icon: ReactNode;
   bgColor: string;
   trend?: number;
 }
 
-const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon, bgColor, trend }) => {
+const StatsCard: FC<StatsCardProps> = ({ title, value, icon, bgColor, trend }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300">
+    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:scale-105 group">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-500 mb-1">{title}</p>
@@ -21,7 +22,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon, bgColor, tren
             </p>
           )}
         </div>
-        <div className={`w-12 h-12 ${bgColor} rounded-xl flex items-center justify-center`}>
+        <div className={`w-12 h-12 ${bgColor} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
           {icon}
         </div>
       </div>
