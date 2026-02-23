@@ -55,6 +55,7 @@ const ProductForm: FC<ProductFormProps> = ({ product, onSubmit, onClose }) => {
       fireAlert('success', 'Image uploaded successfully');
     } catch (error) {
       fireAlert('error', 'Failed to upload image');
+      console.error(error)
     } finally {
       setUploading(false);
     }

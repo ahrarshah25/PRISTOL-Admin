@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { FC } from 'react';
 import { Edit2, Trash2, Eye, Package, Star } from 'lucide-react';
 import type { Product } from '../../../types';
