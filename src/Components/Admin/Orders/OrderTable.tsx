@@ -83,7 +83,7 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                     <div className="flex items-center gap-2">
                       <Package className="w-4 h-4 text-gray-400" />
                       <span className="text-sm text-gray-600">
-                        {order.items?.length || 0} item{order.items?.length > 1 ? 's' : ''}
+                        {order.products?.length || 0} item{order.products?.length > 1 ? 's' : ''}
                       </span>
                     </div>
                   </td>
@@ -120,7 +120,7 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                       <div className="space-y-3">
                         <h4 className="text-sm font-semibold text-gray-700 mb-2">Order Items:</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {order.items?.map((item, index) => (
+                          {order.products?.map((item, index) => (
                             <div key={index} className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
                               <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                                 <img
@@ -202,7 +202,7 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
             <p className="text-xs text-gray-500 mb-2">{order.email}</p>
             
             <div className="space-y-2 mb-3">
-              {order.items?.map((item, index) => (
+              {order.products?.map((item, index) => (
                 <div key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
                   <div className="w-10 h-10 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                     <img

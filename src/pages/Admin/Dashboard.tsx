@@ -8,7 +8,7 @@ const Dashboard: React.FC = () => {
 
   const totalRevenue = orders
     .filter(o => o.status === 'delivered')
-    .reduce((sum, order) => sum + order.totalAmount, 0);
+    .reduce((sum, order) => sum + (order.totalAmount ?? 0), 0);
 
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
   const unreadMessages = messages.filter(m => m.status === 'unread').length;
