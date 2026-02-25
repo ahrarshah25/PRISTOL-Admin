@@ -1,32 +1,58 @@
-import { useState } from 'react';
-import { useAdmin } from '../Context API/AdminContext';
+import { useState, useEffect } from 'react';
+import { collection, query, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { db } from '../Firebase/config';
 import type { Order } from '../types';
 
 export const useOrders = () => {
-  const { orders, updateOrderStatus } = useAdmin();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  const filteredOrders = orders.filter((order: Order) => {
+  useEffect(() => {
+    const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const ordersData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Order[];
+      setOrders(ordersData);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const filteredOrders = orders.filter(order => {
     return statusFilter === 'all' || order.status === statusFilter;
   });
 
-  const getOrderById = (id: string): Order | undefined => {
-    return orders.find((o: Order) => o.id === id);
+  const updateOrderStatus = async (id: string, status: Order['status']) => {
+    try {
+      await updateDoc(doc(db, 'orders', id), { status });
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
   };
 
   const getTotalRevenue = (): number => {
     return orders
-      .filter((o: Order) => o.status === 'delivered')
-      .reduce((sum: number, order: Order) => sum + order.totalAmount, 0);
+      .filter(o => o.status === 'delivered')
+      .reduce((sum, order) => sum + (order.totalAmount || order.total || 0), 0);
   };
 
   const getPendingOrders = (): number => {
-    return orders.filter((o: Order) => o.status === 'pending').length;
+    return orders.filter(o => o.status === 'pending').length;
+  };
+
+  const getOrderById = (id: string): Order | undefined => {
+    return orders.find(o => o.id === id);
   };
 
   return {
     orders: filteredOrders,
     allOrders: orders,
+    loading,
     statusFilter,
     setStatusFilter,
     updateOrderStatus,

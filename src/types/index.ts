@@ -32,17 +32,29 @@ export interface Order {
   customerEmail: string;
   customerPhone: string;
   address: string;
+  city: string;
+  postalCode?: string;
   products: Array<{
     productId: string;
     name: string;
     price: number;
     quantity: number;
+    imageUrl: string;
   }>;
-  totalAmount: number;
+  totalAmount?: number;
+  total?: number;
+  subtotal?: number;
+  shipping?: number;
+  tax?: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   paymentMethod: string;
   paymentStatus: 'paid' | 'unpaid' | 'refunded';
+  orderType: 'cart' | 'product';
+  orderDate: number;
   createdAt: number;
+  fullName?: string;
+  email?: string;
+  phone?: string;
 }
 
 export interface AdminContextType {

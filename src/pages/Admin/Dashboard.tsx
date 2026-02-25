@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
                   <p className="text-xs text-gray-500">#{order.id.slice(-8)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">Rs. {order.totalAmount.toLocaleString()}</p>
+                  <p className="text-sm font-semibold text-gray-900">Rs. {order.totalAmount?.toLocaleString()}</p>
                   <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${
                     order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                     order.status === 'delivered' ? 'bg-green-100 text-green-800' :
