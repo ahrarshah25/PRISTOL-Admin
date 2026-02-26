@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../Firebase/config';
 import { AdminProvider } from '../Context API/AdminContext';
 import Sidebar from '../Components/Admin/Layout/Sidebar';
 import Dashboard from './Admin/Dashboard';
@@ -8,6 +10,18 @@ import Messages from './Admin/Messages';
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate('/');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
 
   const renderContent = (): React.ReactNode => {
     switch (activeTab) {
