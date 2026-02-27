@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../Firebase/config';
 import type { Product, Order, ContactMessage, AdminContextType } from '../types';
+import { normalizeOrder } from '../helpers/orderNormalizer';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
@@ -45,10 +46,10 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const fetchOrders = async (): Promise<void> => {
     try {
       const querySnapshot = await getDocs(query(collection(db, 'orders'), orderBy('createdAt', 'desc')));
-      const ordersData = querySnapshot.docs.map(doc => ({
+      const ordersData = querySnapshot.docs.map(doc => normalizeOrder({
         id: doc.id,
         ...doc.data()
-      })) as Order[];
+      }));
       setOrders(ordersData);
     } catch (error) {
       console.error('Error fetching orders:', error);

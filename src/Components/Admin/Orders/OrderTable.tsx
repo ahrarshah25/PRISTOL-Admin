@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { Fragment, type FC } from 'react';
 import { Package, ChevronDown, ChevronUp } from 'lucide-react';
 import type { Order } from '../../../types';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ interface OrderTableProps {
 
 const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const getItemPrice = (price: number): number => (Number.isFinite(price) ? price : 0);
 
   const getStatusColor = (status: Order['status']): string => {
     const colors = {
@@ -53,8 +54,8 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {orders.map((order) => (
-              <>
-                <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+              <Fragment key={order.id}>
+                <tr className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <button
@@ -137,11 +138,11 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                                 <div className="flex items-center justify-between mt-1">
                                   <span className="text-xs text-gray-500">Qty: {item.quantity}</span>
                                   <span className="text-xs font-semibold text-green-600">
-                                    Rs. {(item.price * item.quantity).toLocaleString()}
+                                    Rs. {(getItemPrice(item.price) * item.quantity).toLocaleString()}
                                   </span>
                                 </div>
                                 <p className="text-xs text-gray-400 mt-1">
-                                  Rs. {item.price.toLocaleString()} each
+                                  Rs. {getItemPrice(item.price).toLocaleString()} each
                                 </p>
                               </div>
                             </div>
@@ -182,7 +183,7 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
@@ -218,7 +219,7 @@ const OrderTable: FC<OrderTableProps> = ({ orders, onUpdateStatus }) => {
                     <p className="text-xs font-medium truncate">{item.name}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">x{item.quantity}</span>
-                      <span className="text-xs font-semibold">Rs. {(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="text-xs font-semibold">Rs. {(getItemPrice(item.price) * item.quantity).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

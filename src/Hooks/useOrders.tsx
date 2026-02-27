@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../Firebase/config';
 import type { Order } from '../types';
+import { normalizeOrder } from '../helpers/orderNormalizer';
 
 export const useOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -12,10 +13,10 @@ export const useOrders = () => {
     const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const ordersData = snapshot.docs.map(doc => ({
+      const ordersData = snapshot.docs.map(doc => normalizeOrder({
         id: doc.id,
         ...doc.data()
-      })) as Order[];
+      }));
       setOrders(ordersData);
       setLoading(false);
     });

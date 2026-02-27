@@ -41,6 +41,13 @@ export interface Order {
     quantity: number;
     imageUrl: string;
   }>;
+  items?: Array<{
+    productId: string;
+    name: string;
+    price: number | string;
+    quantity: number;
+    imageUrl: string;
+  }>;
   totalAmount?: number;
   total?: number;
   subtotal?: number;
